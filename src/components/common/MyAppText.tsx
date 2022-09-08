@@ -1,21 +1,15 @@
-import React, {ReactElement, ReactNode} from "react";
-import {StyleSheet, Text} from "react-native";
+import React, {ReactElement} from "react"
 
-export const MyAppText = ({children}: MyAppTextPropsType): ReactElement => {
-    return (
-        <Text style={{color: "#fff"}}>
-            {children}
-        </Text>
-    )
-}
+import {StyleSheet, Text, TextProps} from "react-native"
+
+import {Colors} from "../../enum/Colors"
+
+export const MyAppText = ({children, style}: TextProps): ReactElement => (
+    <Text style={[styles.container, style]}>{children}</Text>
+)
 
 const styles = StyleSheet.create({
     container: {
-        color: "#fff",
-        fontFamily: "Montserrat"
+        color: Colors.White,
     },
 })
-
-type MyAppTextPropsType = {
-    children: ReactNode
-}
