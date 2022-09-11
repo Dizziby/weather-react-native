@@ -21,18 +21,17 @@ export const Search = (): ReactElement => {
             onChangeText={setSearchLocalState}
             onBlur={handleBlur}
             value={search}
-            placeholder="Search in Berlin"
+            placeholder="Search"
         />
     )
 }
 
 const styles = StyleSheet.create({
     input: {
-        borderWidth: 0,
         borderRadius: 5,
         backgroundColor: Colors.White,
         marginTop: 20,
-        marginHorizontal: 10,
+        marginHorizontal: 15,
         paddingHorizontal: 10,
         paddingVertical: 5,
         fontSize: 16,

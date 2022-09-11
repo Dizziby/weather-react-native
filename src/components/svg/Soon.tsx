@@ -1,8 +1,9 @@
 import * as React from "react"
+import {ReactElement} from "react";
 
 import Svg, {SvgProps, Path} from "react-native-svg"
 
-export const SvgSun = (props: SvgProps) => (
+export const SvgSun = (props: SvgProps): ReactElement => (
     <Svg viewBox="0 0 64 64" width={24} height={24} {...props}>
         <Path
             fill="white"

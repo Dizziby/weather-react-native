@@ -3,7 +3,6 @@ import React, {ReactElement} from "react"
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs"
 import {StyleSheet, View} from "react-native"
 
-import {MyAppText} from "./components/common/MyAppText"
 import {Forecast} from "./components/Forecast/Forecast"
 import {Weather} from "./components/Weather/Weather"
 import {RootStackParamList} from "./types/types"
@@ -16,10 +15,9 @@ export const Main = (): ReactElement => {
     return (
         <View style={styles.container} >
             <Tab.Navigator>
-                <Tab.Screen name="Weather" component={Weather}/>
-                <Tab.Screen name="Forecast" component={Forecast} />
+                <Tab.Screen name="Weather" component={Weather} options={{title: "Today"}}/>
+                <Tab.Screen name="Forecast" component={Forecast} options={{title: "5 days"}}/>
             </Tab.Navigator>
-            <MyAppText>Main</MyAppText>
         </View>
     )
 }

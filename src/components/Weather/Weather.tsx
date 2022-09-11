@@ -11,6 +11,7 @@ import {
 } from "react-native"
 
 import {useGetForecastQuery, useGetWeatherQuery} from "../../api/weatherApi"
+import {imageBackground} from "../../constants/imageBackground"
 import {useAppSelector} from "../../hooks/useAppSelector"
 
 import {AdditionalInfoWeather} from "./AdditionalInfoWeather/AdditionalInfoWeather"
@@ -32,9 +33,11 @@ export const Weather = (): ReactElement => {
             isLoadingWeather: isLoading,
         }),
     })
-    const {list} = useGetForecastQuery(search, {selectFromResult: ({data}) => ({
-            list: data?.list
-        })})
+    const {list} = useGetForecastQuery(search, {
+        selectFromResult: ({data}) => ({
+            list: data?.list,
+        }),
+    })
 
     // Refresh
     const [refreshing, setRefreshing] = React.useState(false)
@@ -52,7 +55,7 @@ export const Weather = (): ReactElement => {
             contentContainerStyle={styles.containerScroll}
         >
             <ImageBackground
-                source={require("../../../assets/img/night.png")} // eslint-disable-line global-require
+                source={imageBackground}
                 resizeMode="cover"
                 style={styles.imageBackground}
             >
@@ -60,8 +63,10 @@ export const Weather = (): ReactElement => {
                     <ActivityIndicator style={styles.loading} size="large" />
                 ) : (
                     <View style={styles.container}>
-                        <Search />
-                        {weather && <MainInfoWeather weather={weather} />}
+                        <View>
+                            <Search />
+                            {weather && <MainInfoWeather weather={weather} />}
+                        </View>
                         {list && <AdditionalInfoWeather list={list} />}
                     </View>
                 )}

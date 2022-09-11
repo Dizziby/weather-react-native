@@ -11,5 +11,6 @@ export const MyAppText = ({children, style}: TextProps): ReactElement => (
 const styles = StyleSheet.create({
     container: {
         color: Colors.White,
+        fontFamily: "sans-serif-light",
     },
 })

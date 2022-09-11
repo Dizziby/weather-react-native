@@ -1,47 +1,71 @@
 import React, {ReactElement} from "react"
 
-import {ImageBackground, StyleSheet, View} from "react-native"
+import {ImageBackground, RefreshControl, ScrollView, StyleSheet, View} from "react-native"
 
 import {useGetForecastQuery} from "../../api/weatherApi"
+import {Colors} from "../../enum/Colors"
 import {useAppSelector} from "../../hooks/useAppSelector"
-import {MyAppText} from "../common/MyAppText"
 
-import {ForecastFiveDay} from "./ForecastFiveDay/ForecastFiveDay"
+import {ForecastItem} from "./ForecastItem/ForecastItem"
+
+const wait = (timeout: number): Promise<any> =>
+    // eslint-disable-next-line no-promise-executor-return
+    new Promise(resolve => setTimeout(resolve, timeout))
 
 export const Forecast = (): ReactElement => {
     console.log("Forecast")
 
     const search = useAppSelector(state => state.weatherReducer.search)
 
-    // const {data: forecast2} = useQuery("forecast2")
-    //
-    // console.log(forecast2)
+    const {list} = useGetForecastQuery(search, {
+        selectFromResult: ({data}) => ({
+            list: data?.list,
+        }),
+    })
 
-    const {data: forecast} = useGetForecastQuery(search)
-    const list = forecast?.list
+    // Refresh
+    const [refreshing, setRefreshing] = React.useState(false)
+    const delayRefresh = 2000
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true)
+        wait(delayRefresh).then(() => setRefreshing(false))
+    }, [])
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            contentContainerStyle={styles.containerScroll}
+        >
             <ImageBackground
-                source={require("../../../assets/img/night.png")} // eslint-disable-line global-require
+                source={require("../../../assets/img/night.jpg")} // eslint-disable-line global-require
                 resizeMode="cover"
                 style={styles.imageBackground}
             >
-                <MyAppText style={styles.city}>{forecast?.city.name}</MyAppText>
-                {list && <ForecastFiveDay list={list} />}
+                {list && (
+                    <View style={styles.container}>
+                        {list
+                            .filter(el => el.dt_txt.slice(11, 13) === "15")
+                            .map(el => (
+                                <ForecastItem key={el.dt_txt} item={el} />
+                            ))}
+                    </View>
+                )}
             </ImageBackground>
-        </View>
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    city: {
-        fontSize: 26,
+    containerScroll: {
+        flexGrow: 1,
     },
     imageBackground: {
         height: "100%",
+    },
+    container: {
+        borderBottomWidth: 1,
+        borderColor: Colors.White,
     },
 })

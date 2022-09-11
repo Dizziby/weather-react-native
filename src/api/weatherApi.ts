@@ -4,24 +4,42 @@ export const weatherApi = createApi({
     reducerPath: "weatherApi",
     baseQuery: fetchBaseQuery({baseUrl: "https://api.openweathermap.org/data/2.5/"}),
     endpoints: builder => ({
-        getWeather: builder.query<GetDataResponseType, string>({
+        getWeather: builder.query<WeatherType, string>({
             query: city => `weather?q=${city}&appid=d8b8feb797d8d7246525255551517358`,
+            transformResponse: (response: GetDataResponseType) => ({
+                temp: response.main.temp,
+                city: response.name,
+                sky: response.weather[0].main,
+            }),
         }),
-        getForecast: builder.query<GetForecastResponseType, string>({
+        getForecast: builder.query<ForecastType, string>({
             query: city => `forecast?q=${city}&appid=d8b8feb797d8d7246525255551517358`,
+            transformResponse: (response: GetForecastResponseType) => ({
+                list: response.list,
+            }),
         }),
     }),
 })
 
 export const {useGetWeatherQuery, useGetForecastQuery} = weatherApi
 
-// Types
+// TYPES
+export type WeatherType = {
+    temp: number
+    city: string
+    sky: string
+}
+export type ForecastType = {
+    list: ForecastListType[]
+}
+
+// response
 export type GetDataResponseType = {
     coord: {
         lon: number
         lat: number
     }
-    weather: WeatherType[]
+    weather: GetWeatherType[]
     base: string
     main: {
         temp: number
@@ -52,7 +70,7 @@ export type GetDataResponseType = {
     name: string
     cod: number
 }
-export type WeatherType = {
+export type GetWeatherType = {
     id: number
     main: string
     description: string
