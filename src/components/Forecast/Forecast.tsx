@@ -3,6 +3,7 @@ import React, {ReactElement} from "react"
 import {ImageBackground, RefreshControl, ScrollView, StyleSheet, View} from "react-native"
 
 import {useGetForecastQuery} from "../../api/weatherApi"
+import {imageBackground} from "../../constants/imageBackground"
 import {Colors} from "../../enum/Colors"
 import {useAppSelector} from "../../hooks/useAppSelector"
 
@@ -13,7 +14,6 @@ const wait = (timeout: number): Promise<any> =>
     new Promise(resolve => setTimeout(resolve, timeout))
 
 export const Forecast = (): ReactElement => {
-    console.log("Forecast")
 
     const search = useAppSelector(state => state.weatherReducer.search)
 
@@ -39,7 +39,7 @@ export const Forecast = (): ReactElement => {
             contentContainerStyle={styles.containerScroll}
         >
             <ImageBackground
-                source={require("../../../assets/img/night.jpg")} // eslint-disable-line global-require
+                source={imageBackground} // eslint-disable-line global-require
                 resizeMode="cover"
                 style={styles.imageBackground}
             >

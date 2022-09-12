@@ -26,7 +26,7 @@ const DayTheme = {
 
 const hour = dayjs().hour()
 
-let timesDay: TimesDayType = "day"
+let timesDay: TimesDayType
 
 if (hour > 6 && hour < 21) {
     timesDay = "day"
@@ -42,8 +42,6 @@ export const imageBackground =
 export const navigationTheme = timesDay === "day" ? DayTheme : NightTheme
 
 type TimesDayType = "day" | "night"
-
-
 
 // Night
 // background: "rgb(104,81,107)",
