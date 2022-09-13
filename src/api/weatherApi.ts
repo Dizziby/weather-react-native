@@ -6,7 +6,7 @@ export const weatherApi = createApi({
     endpoints: builder => ({
         getWeather: builder.query<WeatherType, string>({
             query: city => `weather?q=${city}&appid=d8b8feb797d8d7246525255551517358`,
-            transformResponse: (response: GetDataResponseType) => ({
+            transformResponse: (response: GetWeatherResponseType) => ({
                 temp: response.main.temp,
                 city: response.name,
                 sky: response.weather[0].main,
@@ -34,7 +34,7 @@ export type ForecastType = {
 }
 
 // response
-export type GetDataResponseType = {
+export type GetWeatherResponseType = {
     coord: {
         lon: number
         lat: number
@@ -82,7 +82,7 @@ export type GetForecastResponseType = {
     message: number
     cnt: number
     list: ForecastListType[]
-    city: CityType
+    city: ForecastCityType
 }
 export type ForecastListType = {
     dt: number
@@ -103,7 +103,7 @@ export type ForecastListType = {
     }
     dt_txt: string
 }
-export type CityType = {
+export type ForecastCityType = {
     id: number
     name: string
     coord: {

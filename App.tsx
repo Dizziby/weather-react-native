@@ -6,7 +6,7 @@ import {StyleSheet, View} from "react-native"
 import {Colors} from "react-native/Libraries/NewAppScreen"
 import {Provider} from "react-redux"
 
-import {navigationTheme} from "./src/constants/imageBackground";
+import {navigationTheme} from "./src/constants/imageBackground"
 import {Main} from "./src/Main"
 import {store} from "./src/store/store"
 
@@ -15,9 +15,9 @@ export default function App(): ReactElement {
         <NavigationContainer theme={navigationTheme}>
             <Provider store={store}>
                 <View style={styles.container}>
-                    <Main/>
+                    <Main />
                     {/* eslint-disable-next-line react/style-prop-object */}
-                    <StatusBar style="auto"/>
+                    <StatusBar style="auto" />
                 </View>
             </Provider>
         </NavigationContainer>

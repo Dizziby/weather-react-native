@@ -2,24 +2,31 @@ import React, {ReactElement} from "react"
 
 import {StyleSheet, View} from "react-native"
 
-import {WeatherType} from "../../../api/weatherApi"
+import {useGetWeatherQuery} from "../../../api/weatherApi"
 import {Colors} from "../../../enum/Colors"
+import {useAppSelector} from "../../../hooks/useAppSelector"
 import {convertKelvinToCelsius} from "../../../utils/convertKelvinToCelsius"
 import {MyAppText} from "../../common/MyAppText"
 
-export const MainInfoWeather = React.memo(
-    ({weather: {city, sky, temp}}: MainWeatherInfoPropsType): ReactElement => {
-        console.log("MainInfoWeather")
+export const MainInfoWeather = (): ReactElement => {
+    const search = useAppSelector(state => state.weatherReducer.search)
 
-        return (
-            <View style={styles.container}>
-                <MyAppText style={styles.city}>{city}</MyAppText>
-                <MyAppText style={styles.temp}>{convertKelvinToCelsius(temp)}°</MyAppText>
-                <MyAppText style={styles.sky}>{sky}</MyAppText>
-            </View>
-        )
-    },
-)
+    const {city, sky, temp} = useGetWeatherQuery(search, {
+        selectFromResult: ({data}) => ({
+            city: data?.city,
+            sky: data?.sky,
+            temp: data?.temp,
+        }),
+    })
+
+    return (
+        <View style={styles.container}>
+            <MyAppText style={styles.city}>{city}</MyAppText>
+            <MyAppText style={styles.temp}>{convertKelvinToCelsius(temp)}°</MyAppText>
+            <MyAppText style={styles.sky}>{sky}</MyAppText>
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -42,7 +49,3 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 })
-
-type MainWeatherInfoPropsType = {
-    weather: WeatherType
-}

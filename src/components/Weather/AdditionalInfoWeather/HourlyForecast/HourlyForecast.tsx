@@ -2,14 +2,23 @@ import React, {ReactElement} from "react"
 
 import {Image, ScrollView, StyleSheet, View} from "react-native"
 
-import {ForecastListType} from "../../../../api/weatherApi"
+import {useGetForecastQuery} from "../../../../api/weatherApi"
 import {Colors} from "../../../../enum/Colors"
+import {useAppSelector} from "../../../../hooks/useAppSelector";
 import {convertKelvinToCelsius} from "../../../../utils/convertKelvinToCelsius"
 import {MyAppText} from "../../../common/MyAppText"
 
-export const HourlyForecast = ({list}: ForecastDayPropsType): ReactElement => (
-    <ScrollView style={styles.container} horizontal>
-        {list
+export const HourlyForecast = (): ReactElement => {
+    const search = useAppSelector(state => state.weatherReducer.search)
+
+    const {list} = useGetForecastQuery(search, {
+        selectFromResult: ({data}) => ({
+            list: data?.list,
+        }),
+    })
+
+    return <ScrollView style={styles.container} horizontal>
+        {list && list
             .filter((el, index) => index < 8)
             .map(el => {
                 const time = el.dt_txt.slice(11, 16)
@@ -36,7 +45,7 @@ export const HourlyForecast = ({list}: ForecastDayPropsType): ReactElement => (
                 )
             })}
     </ScrollView>
-)
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -67,7 +76,3 @@ const styles = StyleSheet.create({
         height: 40,
     },
 })
-
-type ForecastDayPropsType = {
-    list: ForecastListType[]
-}

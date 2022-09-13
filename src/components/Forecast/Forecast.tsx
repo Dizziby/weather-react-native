@@ -1,6 +1,13 @@
 import React, {ReactElement} from "react"
 
-import {ImageBackground, RefreshControl, ScrollView, StyleSheet, View} from "react-native"
+import {
+    ActivityIndicator,
+    ImageBackground,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    View,
+} from "react-native"
 
 import {useGetForecastQuery} from "../../api/weatherApi"
 import {imageBackground} from "../../constants/imageBackground"
@@ -14,12 +21,12 @@ const wait = (timeout: number): Promise<any> =>
     new Promise(resolve => setTimeout(resolve, timeout))
 
 export const Forecast = (): ReactElement => {
-
     const search = useAppSelector(state => state.weatherReducer.search)
 
-    const {list} = useGetForecastQuery(search, {
-        selectFromResult: ({data}) => ({
+    const {list, isLoadingForecast} = useGetForecastQuery(search, {
+        selectFromResult: ({data, isLoading}) => ({
             list: data?.list,
+            isLoadingForecast: isLoading,
         }),
     })
 
@@ -43,14 +50,18 @@ export const Forecast = (): ReactElement => {
                 resizeMode="cover"
                 style={styles.imageBackground}
             >
-                {list && (
-                    <View style={styles.container}>
-                        {list
-                            .filter(el => el.dt_txt.slice(11, 13) === "15")
-                            .map(el => (
-                                <ForecastItem key={el.dt_txt} item={el} />
-                            ))}
-                    </View>
+                {isLoadingForecast ? (
+                    <ActivityIndicator style={styles.loading} size="large" />
+                ) : (
+                    list && (
+                        <View style={styles.container}>
+                            {list
+                                .filter(el => el.dt_txt.slice(11, 13) === "15")
+                                .map(el => (
+                                    <ForecastItem key={el.dt_txt} item={el} />
+                                ))}
+                        </View>
+                    )
                 )}
             </ImageBackground>
         </ScrollView>
@@ -67,5 +78,9 @@ const styles = StyleSheet.create({
     container: {
         borderBottomWidth: 1,
         borderColor: Colors.White,
+    },
+    loading: {
+        flex: 1,
+        justifyContent: "center",
     },
 })

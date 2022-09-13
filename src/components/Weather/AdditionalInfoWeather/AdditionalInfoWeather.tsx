@@ -2,43 +2,49 @@ import React, {ReactElement} from "react"
 
 import {StyleSheet, View} from "react-native"
 
-import {ForecastListType} from "../../../api/weatherApi"
+import {useGetForecastQuery} from "../../../api/weatherApi"
 import {Colors} from "../../../enum/Colors"
+import {useAppSelector} from "../../../hooks/useAppSelector"
 import {convertKelvinToCelsius} from "../../../utils/convertKelvinToCelsius"
 import {getCurrentTime} from "../../../utils/getCurrentTime"
 import {MyAppText} from "../../common/MyAppText"
 
 import {HourlyForecast} from "./HourlyForecast/HourlyForecast"
 
-export const AdditionalInfoWeather = React.memo(
-    ({list}: AdditionalInfoWeatherPropsType): ReactElement => {
-        const currentTime = getCurrentTime()
-        const dayTemp = convertKelvinToCelsius(
-            list.filter(el => el.dt_txt.slice(11, 13) === "15")[0].main.temp,
-        )
-        const nightTemp = convertKelvinToCelsius(
-            list.filter(el => el.dt_txt.slice(11, 13) === "03")[0].main.temp,
-        )
+export const AdditionalInfoWeather = (): ReactElement => {
+    const search = useAppSelector(state => state.weatherReducer.search)
 
-        console.log("AdditionalInfoWeather")
+    const {list} = useGetForecastQuery(search, {
+        selectFromResult: ({data}) => ({
+            list: data?.list,
+        }),
+    })
 
-        return (
-            <View>
-                <View style={styles.genericInfo}>
-                    <View style={styles.dateInfo}>
-                        <MyAppText style={styles.currentTime}>{currentTime}</MyAppText>
-                        <MyAppText style={styles.day}>Today</MyAppText>
-                    </View>
-                    <View style={styles.temp}>
-                        <MyAppText style={styles.dayTemp}>{dayTemp}°</MyAppText>
-                        <MyAppText style={styles.nightTemp}>{nightTemp}°</MyAppText>
-                    </View>
+    const currentTime = getCurrentTime()
+
+    const dayTemp = convertKelvinToCelsius(
+        list && list.filter(el => el.dt_txt.slice(11, 13) === "15")[0].main.temp,
+    )
+    const nightTemp = convertKelvinToCelsius(
+        list && list.filter(el => el.dt_txt.slice(11, 13) === "03")[0].main.temp,
+    )
+
+    return (
+        <View>
+            <View style={styles.genericInfo}>
+                <View style={styles.dateInfo}>
+                    <MyAppText style={styles.currentTime}>{currentTime}</MyAppText>
+                    <MyAppText style={styles.day}>Today</MyAppText>
                 </View>
-                <HourlyForecast list={list} />
+                <View style={styles.temp}>
+                    <MyAppText style={styles.dayTemp}>{dayTemp}°</MyAppText>
+                    <MyAppText style={styles.nightTemp}>{nightTemp}°</MyAppText>
+                </View>
             </View>
-        )
-    },
-)
+            <HourlyForecast />
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     genericInfo: {
@@ -75,6 +81,6 @@ const styles = StyleSheet.create({
     },
 })
 
-type AdditionalInfoWeatherPropsType = {
-    list: ForecastListType[]
-}
+// type AdditionalInfoWeatherPropsType = {
+//     list: ForecastListType[]
+// }

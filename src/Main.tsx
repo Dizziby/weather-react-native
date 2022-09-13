@@ -9,18 +9,22 @@ import {RootStackParamList} from "./types/types"
 
 const Tab = createMaterialTopTabNavigator<RootStackParamList>()
 
-export const Main = (): ReactElement => {
-    console.log("Main")
-
-    return (
-        <View style={styles.container} >
+export const Main = (): ReactElement => (
+        <View style={styles.container}>
             <Tab.Navigator>
-                <Tab.Screen name="Weather" component={Weather} options={{title: "Today"}}/>
-                <Tab.Screen name="Forecast" component={Forecast} options={{title: "5 days"}}/>
+                <Tab.Screen
+                    name="Weather"
+                    component={Weather}
+                    options={{title: "Today"}}
+                />
+                <Tab.Screen
+                    name="Forecast"
+                    component={Forecast}
+                    options={{title: "5 days"}}
+                />
             </Tab.Navigator>
         </View>
     )
-}
 
 const styles = StyleSheet.create({
     container: {

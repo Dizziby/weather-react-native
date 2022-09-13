@@ -10,7 +10,7 @@ import {
     View,
 } from "react-native"
 
-import {useGetForecastQuery, useGetWeatherQuery} from "../../api/weatherApi"
+import {useGetWeatherQuery} from "../../api/weatherApi"
 import {imageBackground} from "../../constants/imageBackground"
 import {useAppSelector} from "../../hooks/useAppSelector"
 
@@ -23,19 +23,12 @@ const wait = (timeout: number): Promise<any> =>
     new Promise(resolve => setTimeout(resolve, timeout))
 
 export const Weather = (): ReactElement => {
-    console.log("Weather")
 
     const search = useAppSelector(state => state.weatherReducer.search)
 
-    const {weather, isLoadingWeather} = useGetWeatherQuery(search, {
-        selectFromResult: ({data, isLoading}) => ({
-            weather: data,
+    const {isLoadingWeather} = useGetWeatherQuery(search, {
+        selectFromResult: ({isLoading }) => ({
             isLoadingWeather: isLoading,
-        }),
-    })
-    const {list} = useGetForecastQuery(search, {
-        selectFromResult: ({data}) => ({
-            list: data?.list,
         }),
     })
 
@@ -65,9 +58,9 @@ export const Weather = (): ReactElement => {
                     <View style={styles.container}>
                         <View>
                             <Search />
-                            {weather && <MainInfoWeather weather={weather} />}
+                            <MainInfoWeather />
                         </View>
-                        {list && <AdditionalInfoWeather list={list} />}
+                        <AdditionalInfoWeather />
                     </View>
                 )}
             </ImageBackground>
